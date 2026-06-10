@@ -1,7 +1,7 @@
 <div align="center">
   <h1>
     <div style="display: inline-flex; align-items: center; gap: 4px;">
-      <img src="https://www.asteroidstudio.org/logo.svg" alt="Asteroid Studio" height="25px" />
+      <img src="https://www.asteroidstudio.org/logo.svg" alt="Asteroid Studio" height="60px" />
     </div>
   </h1>
   <p>Welcome to the <a target="_blank" href="https://www.asteroidstudio.org">Asteroid Studio</a> team. This is our internal landing page with a quick map of how we work, where things live, and how to get unblocked fast.</p>
@@ -20,13 +20,6 @@ New here? Work through this list:
 3. **Get repo access**: access is managed through GitHub Teams. If you're missing a repo, ask your lead rather than requesting individual access.
 4. **Read the engineering conventions** below before opening your first PR.
 
-## 🗂 Key Repositories
-
-| Repository        | What it is                                            |
-| ----------------- | ----------------------------------------------------- |
-| `.github`         | Public org profile, shared community health files     |
-| `.github-private` | This repo: internal docs and the page you're reading |
-
 ### Public Repositories
 
 <!-- public-repos:start -->
@@ -38,8 +31,6 @@ New here? Work through this list:
 | [cms-core-utils](https://github.com/asteroidorg/cms-core-utils) | Seamless integration utilities for Asteroid CMS - Apollo provider, content hooks, and rich-text rendering. |
 
 <!-- public-repos:end -->
-
-> This table is regenerated automatically by the [`update-repo-list`](https://github.com/asteroidorg/.github-private/blob/main/.github/workflows/update-repo-list.yml) workflow. Don't edit it by hand; your changes will be overwritten.
 
 ## 🛠 Engineering Conventions
 
