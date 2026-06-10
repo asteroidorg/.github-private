@@ -1,0 +1,58 @@
+name: Update public repo list
+
+on:
+  schedule:
+    # Weekly, Monday 00:30 UTC. Public repos change rarely; use the
+    # "Run workflow" button (workflow_dispatch) for an immediate refresh.
+    - cron: "30 0 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Never run two updates at once; a newer run supersedes an in-flight one
+concurrency:
+  group: update-repo-list
+  cancel-in-progress: true
+
+jobs:
+  update-repo-list:
+    runs-on: ubuntu-latest
+    # Hard cap so a hung step can't burn minutes
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Regenerate public repo table
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          rows="$(gh repo list "${GITHUB_REPOSITORY_OWNER}" \
+            --visibility public --no-archived --limit 1000 \
+            --json name,description,url \
+            --jq 'sort_by(.name) | .[] | "| [\(.name)](\(.url)) | \(.description // "") |"')"
+
+          table="$(printf '| Repository | Description |\n| --- | --- |\n%s' "$rows")"
+
+          awk -v table="$table" '
+            /<!-- public-repos:start -->/ { print; print ""; print table; print ""; skip=1; next }
+            /<!-- public-repos:end -->/   { skip=0 }
+            !skip
+          ' profile/README.md > profile/README.md.tmp
+          mv profile/README.md.tmp profile/README.md
+
+      - name: Commit changes
+        run: |
+          set -euo pipefail
+          if git diff --quiet profile/README.md; then
+            echo "Repo list is already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add profile/README.md
+          git commit -m "chore: update public repo list"
+          git push
